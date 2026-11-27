@@ -214,8 +214,6 @@ internal sealed partial class CommandTrialHost
             settings.HeroFightsOn = fightOn;
     }
 
-    // Camera feel: the three steps of the camera feel trial. The pointer, the middle button and the one-frame input are the adapter's and the view's
-    // trial fields, read in place of the mouse and the keys; nothing writes an agent or a formation.
     public void SetEdgeScroll(bool on)
     {
         var settings = CommandTrialRun.TrialSettings;
@@ -237,7 +235,6 @@ internal sealed partial class CommandTrialHost
         SetEdgeScroll(false);
     }
 
-    // Two passes: the plane at the ground under the camera gives a first point, and the plane at the ground under that point gives the one read.
     public Vec3f? ViewCentreOnGround()
     {
         if (!_adapter.TryReadCamera(out var camera, out _))
@@ -348,15 +345,13 @@ internal sealed partial class CommandTrialHost
 
     public bool ThirdPerson => !_mission.CameraIsFirstPerson;
 
-    // Marshal's Word stage M7: the panel click steps. The order count comes from the view model's own static event, subscribed on the first
-    // look of an armed trial run (the host is built only then), so a count of the relay's own would prove nothing.
     private Formation? _probedCompany;
     private bool _watchingOrders;
     private int _ordersSeen;
 
     public int OrdersSeen => _ordersSeen;
 
-    // OnExecuteOrder is a static event: a host that subscribed and was dropped would stay reachable from it and keep counting, so the view's
+    // OnExecuteOrder is a static event (OrderItemVM.cs:10): a host that subscribed and was dropped would stay reachable from it and keep counting, so the view's
     // teardown calls this.
     internal void StopWatchingOrders()
     {

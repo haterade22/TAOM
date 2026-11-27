@@ -10,7 +10,7 @@ namespace TAOM.Features.EncounterLines.Hooks;
 /// <summary>
 /// Patch149's text seam: a postfix on public <c>ConversationManager.UpdateCurrentSentenceText</c>, which stores the text of the
 /// sentence being spoken. For the sentences the service handles (caravan and villager surrender, the hideout boss's
-/// challenge, and the liege conversations in <see cref="LiegeLines"/>) it replaces the stored text with <c>{=!}{TAOM_ENC_LINE}</c>; the <c>{=!}</c> id keeps
+/// challenge, the liege conversations in <see cref="LiegeLines"/> and the notable introductions in <see cref="NotableIntroLines"/>) it replaces the stored text with <c>{=!}{TAOM_ENC_LINE}</c>; the <c>{=!}</c> id keeps
 /// <c>CurrentSentenceText</c> from re-resolving the line by a game-text id. The private fields are bound once in
 /// <see cref="Initialize"/> (the sentence list as <c>object</c>, read as its list type); a failed binding or any fault leaves vanilla's text and warns once. Callers, thread and co-op:
 /// docs/reference/harmony-patch-registry.md "Patch149_EncounterLines".
@@ -43,7 +43,7 @@ public static class EncounterSentenceTextPatch
         catch (Exception ex)
         {
             _sentences = null;
-            Report("the ConversationManager fields did not bind, surrender, hideout and liege lines stay vanilla: " + ex.Message);
+            Report("the ConversationManager fields did not bind, surrender, hideout, liege and notable introduction lines stay vanilla: " + ex.Message);
         }
     }
 
@@ -68,7 +68,7 @@ public static class EncounterSentenceTextPatch
         }
         catch (Exception ex)
         {
-            Report("a surrender, hideout or liege line failed, vanilla's text stands: " + ex.Message);
+            Report("a surrender, hideout, liege or notable introduction line failed, vanilla's text stands: " + ex.Message);
         }
     }
 

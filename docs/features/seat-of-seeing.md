@@ -289,7 +289,7 @@ shows. So a click on a button reached the ground behind it. Stage M7 gives the p
 
 - `SeatCursorLayer` (client adapter, a `GauntletLayer` with no movie) replaces the plain cursor layer. Its two hit tests answer `SeatPanelRelay.ShieldHolds` and
   `ShieldHoldsAt`. While the cursor shows its mask is `Mouse` (the buttons and the wheel, never keys), so `ScreenManager.EarlyUpdate` gives both to it on a frame its
-  hit test is true (`ScreenManager.cs:656-675`); with the cursor hidden the mask is `Invalid`, as before. It is built once and only toggled.
+  hit test is true (`ScreenManager.cs:642-662`); with the cursor hidden the mask is `Invalid`, as before. It is built once and only toggled.
 - `SeatPanelTarget` (pure) walks the order layer's widgets like the engine's own hit walk but ignores the two event flags: children last to first, a hidden widget hides
   everything below it, a child may lie outside its parent's rectangle. It returns the kind of the topmost widget bound to a troop card, an order set or an order, and that
   view model. `SeatPanelRelay` reads a widget's view model through `GauntletView._viewModel` (one reflection site, Category B), finds the order layer by its name
@@ -430,7 +430,7 @@ and every mission would pay that each frame. An unbound key reads as not pressed
 | Fly along the ground | movement axes, with the engine's 0.2 dead zone; with the cursor shown, a pointer within 0.01 of a window edge adds a full push that way, fading to nothing over a further 0.02 (`SeatEdgeScroll`, `Input.MousePositionRanged`); the sum is held to 1 and the speed is multiplied by `SeatPanSpeed` |
 | Rise, sink | game keys 14 (jump, default Space) and 15 (crouch, default Z), rebindable |
 | Fly twice as fast | game key 24 (zoom); doubles the ground speed and the rise speed |
-| Change height | mouse wheel: a notch away from you multiplies the target height by 0.88, and the view eases toward it by `1 - exp(-12 dt)` a frame (`SeatZoom`); the target is held to the lowest height and to the highest, or the room under the scene's height limit, so the cap and the target agree |
+| Change height | mouse wheel: a notch away from you multiplies the target height by 0.88, and the view eases toward it by `1 - exp(-12 dt)` a frame (`SeatZoom`); the target is held to the lowest height and to the highest, or the room under the scene's height limit, so the cap and the target agree; a lift key moves the target by what it moved the height, so a notch during a lift still takes its full step, and any other change of the flight's height (an entry, a hand-back) clears the target |
 | Look | the mouse, with the engine's sensitivity and invert setting; the sticks when no mouse is active; with a cursor shown, the middle button |
 | Turn around a point | hold the middle button in free flight: the view turns around the ground point at the centre of the view (`SeatPivot`, by arithmetic, no ray) and lets go with no jump (the movement keys, lift and wheel are ignored during the turn); with a flat view (pitch under 0.15 rad) or a point over 300 m off, the turn stays in place as before; keeping to a soldier or a company (S3) is unchanged |
 

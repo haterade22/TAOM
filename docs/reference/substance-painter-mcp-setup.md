@@ -94,6 +94,27 @@ is the version the MCP server's local fixes were made against.
 | Export raises "padding algorithm could not be resolved" | `exportParameters` without `paddingAlgorithm` | Pass `"paddingAlgorithm": "infinite"` |
 | Triplanar hardness never changes | The field is `TriplanarProjectionParams.hardness`, not a nested `.triplanar` | Set `p.hardness` |
 
+### Traps on Painter 12.2.0 (two sessions, 2026-11-24; the IPv6 row 2026-11-25)
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| A fill's source is gone after it was set | `set_source` before the fill's `active_channels` | Set `active_channels` first, then `set_source` |
+| A mask from an imported greyscale PNG selects the wrong amount | The bitmap comes in as sRGB | Set its colour space to Raw |
+| An imported bitmap mask has no effect, or the export is real texture on only part of the texels (a steel mask did nothing; about 2.5% of texels exported flat grey; on a later mesh only about 40% of the export was Painter texture) | Traced on the later mesh: it had two UV layers, `["dco", "UVMap"]`, and Painter textures the first one. Likely the cause of the two earlier symptoms too; not tested again on them | Send Painter a mesh with only the texturing UV layer. Prove each mask with a false-colour export: after the fix each mask class covered 100% of its texels. Keep an unmasked base layer under the masked ones |
+| The wood's normal is tilted about 8 degrees everywhere | The downloaded `wood_wenge` material's normal output; its `normal_intensity` parameter does not change it | Keep only the high-pass detail of the layer normal and lay it on a bevel bake |
+| `list_available_color_spaces` fails on a source | A Substance procedural source has none | Set a colour space on bitmap sources only |
+| The texture set is named `<material>.001` | It takes the FBX material name, and Blender added the suffix because the name existed in the source file | Strip the suffix when the maps are composed, or rename the material before export |
+| A port check reads "closed" although Painter runs with remote scripting | Painter 12.2.0 listens on the IPv6 local address only (`[::1]:60041`); a check on `127.0.0.1` read "closed" (found 2026-11-25) | Connect to `localhost` or `::1`, or read the listener with `netstat -ano` |
+| Two sessions drive the one Painter instance | Nothing in Painter stops a second session from opening a project | The user of Painter holds the work claim key `painter-instance`; each session checks the key and runs a read-only project query before any call, and nobody closes a project he did not open |
+
+For the engine: export the DirectX normal (green down). The `_s` map is red metallic, green gloss (255 minus
+roughness), blue ambient occlusion, white where the surface is open. The shader source says so
+(`Shaders/Sources/standart.rsh` of the installed game, read 2026-11-24): `specularity_info =
+pp_modifiable.specular_sample.xy;`, and for a material with the flag `use_specular`,
+`ambient_occlusion_factor *= pp_modifiable.specular_sample.b * g_ambient_occlusion_coef;`; `pbr_metallic.rs`
+defines `USE_METALLIC_WORKFLOW 1`. A flat value in blue is not a "specular level": the chariot carts wrote about
+160 there for wood, which takes about 38 percent of the ambient light off all wood evenly.
+
 ## Modes
 
 `--mode {minimal 25 | lite 74 | default 134 | full 179}`. We run **full** — the vendor's own

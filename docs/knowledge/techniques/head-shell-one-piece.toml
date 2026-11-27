@@ -1,0 +1,34 @@
+title = "Build a head piece as one shell"
+line = "A head piece is one shell on a chart: its outline a smooth closed curve, its openings analytic curves (an ellipse, a circle), its straps under its rim."
+why = "Six separate plates give six outlines and the gaps between them across the face. One shell gives one closed outline and one rim."
+area = "asset-craft"
+status = "active"
+next = "A shared shell builder in tools/blender. Raised eye flanges, which the reference has, are not built."
+
+[when]
+outside = ["*rharmb_shell*.py", "*rharm*design*.py"]
+tasks = ["horse head armour", "chanfron", "head shell"]
+
+[[evidence]]
+grade = "measured"
+value = "Model 01: one continuous shell with a bead rim of radius about 6.6 units and eye rings that stand 33 to 40 units out (read off one section; no kept script makes these three numbers). Ours: v16 six pieces; v18ay one open shell with a turned lip, two eye and two ear openings."
+method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
+date = 2026-11-26
+
+[[evidence]]
+grade = "maintainer"
+value = "That looks fantastic"
+method = "the asset job's work log, entry of 19:23 on 2026-11-25"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "rharmb_shell.py"
+scope = "armour 5 only"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+maintainer = "2026-11-25"
+words = "That looks fantastic"

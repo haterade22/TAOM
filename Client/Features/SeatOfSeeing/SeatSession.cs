@@ -197,7 +197,6 @@ internal sealed class SeatSession
                 read = WithEdgeScroll(read, lookHeld);
                 if (TryOrbitPose(read, dt, out pose))
                 {
-                    // The keep's orbit owns the frame: a middle button held across its start or end must not leave a stale turn.
                     _rotating = false;
                     _lookWasHeld = lookHeld;
                 }
@@ -668,8 +667,6 @@ internal sealed class SeatSession
             _command?.Reset();
     }
 
-    // One line a mission each way: the first click that reached the panel's view model, and the lookup of a widget's view model failing
-    // (the relay is then off and the shield only stops the click, build-spec 6.1).
     private void NoteRelay(SeatRelayResult result)
     {
         if (result == SeatRelayResult.Acted && !_clickNoted)
@@ -786,22 +783,17 @@ internal sealed class SeatSession
         return SeatCameraMath.AboveGround(pose, rawGroundUnderPose);
     }
 
-    // The wheel eases the height toward a target (SeatZoom) and the rest of the flight steps with no notches; a lift key moves the height
-    // on its own, so the target follows it, and any other change of the flight's height (an entry, a hand-back) clears the target.
     private SeatFlight ZoomedStep(SeatInput read, float dt)
     {
         var target = FiniteFloatValidator.IsFinite(_zoomTarget) ? _zoomTarget : _flight.Height;
-        var zoom = SeatZoom.Step(_flight.Height, target, read.ZoomNotches, dt, SeatCameraMath.HeightCeiling(_heightLimit, _ground));
         var ceiling = SeatCameraMath.HeightCeiling(_heightLimit, _ground);
+        var zoom = SeatZoom.Step(_flight.Height, target, read.ZoomNotches, dt, ceiling);
         var next = Bounded(SeatCameraMath.Step(_flight with { Height = zoom.Height }, read with { ZoomNotches = 0f }, dt, _settings.PanSpeed), _flight);
-        // The lift moves the target by what it moved the height, so a notch during a lift still takes its full step.
         var lifted = read.Lift != 0f ? next.Height - zoom.Height : 0f;
         _zoomTarget = lifted == 0f ? zoom.Target : Math.Max(SeatCameraMath.MinHeight, Math.Min(zoom.Target + lifted, ceiling));
         return next;
     }
 
-    // The pointer at the window's edge adds to the keys' push, to at most 1 on each axis; only with the cursor shown, no middle look held,
-    // the setting on and no keep (any push lets a keep go) (the adapter adds the focus, the panel-button and the pointer-in-window tests).
     private SeatInput WithEdgeScroll(SeatInput read, bool lookHeld)
     {
         if (!_cursorShown || lookHeld || !_settings.EdgeScroll || _keep != SeatKeepKind.None)
@@ -810,8 +802,6 @@ internal sealed class SeatSession
         return read with { Right = Math.Max(-1f, Math.Min(1f, read.Right + right)), Forward = Math.Max(-1f, Math.Min(1f, read.Forward + forward)) };
     }
 
-    // The middle button turns the view around the point its centre looks at on the ground, found on the press by arithmetic; with no such
-    // point (a flat view, or a point too far off) the turn stays in place, as it was. Let go, the flight takes over from the last orbit pose.
     private bool TryRotatePose(SeatInput read, bool held, float dt, out SeatPose pose)
     {
         pose = default;
@@ -861,7 +851,6 @@ internal sealed class SeatSession
         return true;
     }
 
-    // The pose of an orbit, held to the boundary, the height limit and the floor, and the flight that holds it, so letting go has no jump.
     private SeatPose OrbitFrame(SeatOrbitState orbit, float dt)
     {
         var raw = SeatOrbit.Pose(orbit);

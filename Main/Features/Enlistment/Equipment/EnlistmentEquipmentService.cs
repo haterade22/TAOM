@@ -102,7 +102,8 @@ public sealed class EnlistmentEquipmentService : IEnlistmentEquipmentService
             return EquipmentIssueResult.PartyUnavailable;
         }
 
-        _ledger.RecordIssue(tier, issued);
+        var reclaimable = issued.FindAll(id => !_itemPool.IsAmmunition(id));
+        _ledger.RecordIssue(tier, reclaimable);
         _logger.LogInfo($"EnlistmentEquipmentService: issued {issued.Count} item(s) from roster "
             + $"'{rosterId}' for ({cultureId}/{assignment}/{tier})");
         return EquipmentIssueResult.Issued;

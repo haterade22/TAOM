@@ -74,6 +74,35 @@ window. The reason for the diet is the instruction count, not the token cost. Ho
 loaded in the week before, and where path rules failed to load, is in
 [harness-retro-2026-11-25.md](reviews/harness-retro-2026-11-25.md).
 
+## `/context all` on 2026-11-26, after the diet
+
+The maintainer ran `/context all` at the start of a new session in the main checkout (model
+`claude-fable-5-2`, 1M-token window). This is the measurement the settings phase of the diet waited for.
+
+| Category | Tokens |
+|---|--:|
+| System prompt | 5.2k |
+| System tools | 23.8k |
+| Memory files (CLAUDE.md 2.2k, AGENTS.md 3k, orientation.md 2.3k, seven unscoped rules about 5.4k, MEMORY.md 1.8k) | 14.8k |
+| Skills (27 project skills at about 60 each; built-in and claude.ai skills about 3.8k) | 5.4k |
+| MCP server instructions | 2.7k |
+| MCP tools, loaded | 704 |
+| Custom agents | 386 |
+| Messages | 2.7k |
+| **Total at session start** | **55.7k (6%)** |
+| Deferred and not loaded: MCP tools | 89.6k |
+| Deferred and not loaded: system tools | 26.3k |
+
+Result: no settings change. Tool search defers the MCP tools, so the 89.6k of tool schemas cost nothing
+until a session asks for one; what the servers load is 704 tokens of tools and 2.7k of instructions.
+A `skillOverrides` entry for each unused built-in skill would save 2k at most, which is 0.2% of the
+window. The largest block, the 23.8k of system tools, has no setting that shrinks it without removing a
+tool TAOM's rules and skills use. Which MCP servers a project loads stays the maintainer's choice in `/mcp`.
+
+The MEMORY.md row may predate the index change of the same day: the index went from 43 lines and
+7,792 B to 40 lines and 4,083 B, with the status text of each line moved into its card
+(`python tools/memory_audit.py` prints the current size).
+
 ## Regrowth guards
 
 - Entry docs (CLAUDE.md, AGENTS.md and orientation.md together; this paragraph described CLAUDE.md alone

@@ -1,0 +1,33 @@
+title = "Hold every edit to a live module in a repo spec with a re-apply tool"
+line = "An edit to a live Armory or TAOM_Map file is lost at the next reinstall or art drop: hold the whole attribute family in a repo spec, re-apply it with a tool that has --check, and register it in tools/data_gates.py."
+why = "The live modules are outside git, so no gate reads the edit, and a ledger describes an edit without making it repeatable. The tool's --check exits 2 when the install is missing, so a machine without the game does not read as drift."
+area = "data-content-cultures"
+status = "active"
+ask = "Which repo file holds the values this live edit wrote, and which --check fails when a reinstall puts the old values back?"
+see = "docs/reference/lotrlome-beard-cover-changes.md#Redo"
+next = "A check that compares a live file with its last synced copy and fails for a changed row that no repo spec owns."
+
+[when]
+outside = ["*/modules/lotrlome_armory/moduledata/*.xml", "*/modules/taom_map/moduledata/*.xml"]
+tasks = ["live armory", "taom_map", "unversioned module", "armory item"]
+
+[[evidence]]
+grade = "measured"
+value = "47 beard cover types corrected by hand were put back by each Armory reinstall, mirror sync or art drop, and by the latest redo two of the 47 ids had left the Armory."
+method = "docs/reference/lotrlome-beard-cover-changes.md, \"Redo\""
+date = 2026-11-14
+
+[[evidence]]
+grade = "measured"
+value = "Three chariot items went into the live Armory with no repo record until a review asked."
+method = "docs/reviews/rca-dwarf-chariot-2026-11-24.md, F6"
+date = 2026-11-24
+
+[[acts]]
+state = "instance"
+where = "tools/apply_armour_cover_flags.py with tools/armour_cover_flags.json, and tools/apply_dwarf_chariot_armory.py; tools/data_gates.py runs the --check of each"
+scope = "one spec and one tool for each of two cases; a new live edit with no spec fails no check"
+
+[[source]]
+lesson = "docs/reviews/lessons/data-content-cultures.md"
+heading = "### An edit to an unversioned module needs a repo-held spec and a re-apply tool with a check (Armory cover attributes, 2026-11-14)"

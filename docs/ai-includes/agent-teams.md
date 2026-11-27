@@ -82,6 +82,8 @@ Rules:
 - Do NOT edit IoC.cs or SubModule.cs — report needed registrations to lead
 - Lessons: {LESSONS} (the lead names the lesson headings and their files that apply to this task);
   read each before the first edit, and list in your report what you did about each one
+- Knowledge: {KNOWLEDGE} (the lead pastes what `python tools/knowledge.py brief --paths <files> --task <phrases>`
+  prints); follow each entry, or say in your report why one does not apply
 - Docs move with the code: update the feature's docs/features/<feature-name>.md as you change it,
   and grep docs/ for every type or member you add, change, delete or rename
 - A value from config: validate its range, and compute anything derived from it in long and clamp it

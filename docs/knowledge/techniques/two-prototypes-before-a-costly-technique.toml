@@ -1,0 +1,31 @@
+title = "Show two prototypes before a technique with a real triangle cost"
+line = "For a technique with a real triangle cost, build two prototypes at LOD0 behind a switch, measure each for triangles and gates, show both from the reference's camera, and let the maintainer choose."
+why = "The cost of a technique is known before it is built into six LODs, and the choice between look and budget is his."
+area = "asset-craft"
+status = "active"
+next = "A prototype switch in the shared band builder, so that the second variant costs one argument."
+
+[when]
+outside = ["*rharmb_bands*.py", "*rharm*design*.py", "*rharm*proto*.py"]
+tasks = ["mesh prototype", "triangle budget", "two variants"]
+
+[[evidence]]
+grade = "measured"
+value = "The neck of armour 5: the bead in geometry cost 1,839 triangles, the bead in the map 1,003. Both were shown beside the reference from the reference's camera, and he chose."
+method = "the prototype counts of the rework builder at LOD0, in the asset job's record"
+date = 2026-11-25
+
+[[evidence]]
+grade = "maintainer"
+value = "His choice in a dialog on 2026-11-25: the option \"Rounded ends, rim in normal map\". The label is the session's wording, not his."
+method = "the asset job's work log, entry of 15:01 on 2026-11-25"
+date = 2026-11-25
+
+[[acts]]
+state = "instance"
+where = "BAND_PROTO and the RHARMB_BAND switch in rharmb_design5.py: modes G and N of rharmb_bands.py, at LOD0"
+scope = "the neck bands of armour 5 only"
+
+[[source]]
+teardown = "2026-11-26-horse-armour-neck-and-head"
+

@@ -50,7 +50,8 @@ GUID repeats, and every package is structurally sound. It cannot see whether the
 2. **The material lives in another package.** `map_icon_parts.tpac` holds no materials. The donor's material,
    `arab_map_icons` (`6db07f83-8320-4e54-ab33-44c68d84fc24`), is in `materials.tpac`. Clone it under a new GUID and
    name; editing it in place would repaint every Aserai map icon. **Set no shader:** the clone carries
-   `c3479109-ae83-4ed8-ab3d-082599f08526`, the general-purpose shader (`328d3572-...` is a head-project shader).
+   `c3479109-ae83-4ed8-ab3d-082599f08526` (`pbr_main_map` in `core.tpac`, the shader of the donor's material;
+   `328d3572-...` is `pbr_metallic`, a different shader, which 53 of the 55 Gondor kit materials use).
 3. **Repoint diffuse slots 0 and 1**, which vanilla points at the same texture. **Slots 2 (normal) and 4
    (specular) get flat 8x8 maps** (normal `128,128,255`): the donor's maps are authored for the tent's UV, and on
    foreign UV the engine samples them at random, so the prop renders dark and mushy. Slot 8 stays. Clear the

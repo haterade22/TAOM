@@ -1,0 +1,26 @@
+title = "Report a detached Blender job from the shared wrapper"
+line = "A Blender script that a caller polls runs its body inside job() of tools/blender/blender_job.py and reads its output folder with flag_value before argparse. job() removes the old report and writes ok or error."
+why = "The Store build of Blender detaches and prints nothing, so the caller trusts a report file. Scripts that each wrote their own left a stale ok, or no file at all, and the caller read each as success."
+area = "build-tooling-workflow"
+status = "active"
+ask = "Does every new or changed Blender script that a caller polls write its report through blender_job.job()?"
+next = "A check that fails a script under tools/blender that writes its own completion file or is polled without job(). The wrapper's own test does not see a script that skips it."
+
+[when]
+paths = ["*/tools/blender/*.py"]
+tasks = ["blender script", "detached job", "headless blender", "blender report"]
+
+[[evidence]]
+grade = "measured"
+value = "Third time in three days: five Blender scripts each wrote their own completion file; one wrote ok before its export, three wrote nothing on an exception and left the previous file."
+method = "the lesson this entry names; docs/reviews/rca-carn-dum-icon-tooling-2026-10-16.md, finding 3, lists the scripts"
+date = 2026-10-16
+
+[[acts]]
+state = "code"
+ref = "tools/blender/blender_job.py::def job(path):"
+scope = "a script that calls it: it writes error with the trace on any exception, SystemExit included. Nothing fails when a new polled script does not call it"
+
+[[source]]
+lesson = "docs/reviews/lessons/build-tooling-workflow.md"
+heading = "### Write a detached script's completion file from one shared wrapper, on every exit (Carn Dûm map icon, 2026-10-16)"

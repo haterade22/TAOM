@@ -28,7 +28,6 @@ internal static class SeatEdgeScroll
 
     private static bool Inside(float ranged) => FiniteFloatValidator.IsFinite(ranged) && ranged >= 0f && ranged <= 1f;
 
-    // Positive toward the high edge (1), negative toward the low edge (0); the two ramps never overlap while the margin stays under a quarter.
     private static float Push(float ranged, float margin) => Strength(1f - ranged, margin) - Strength(ranged, margin);
 
     private static float Strength(float distanceFromEdge, float margin)
