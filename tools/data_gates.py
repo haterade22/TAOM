@@ -465,6 +465,10 @@ GATES = (
          ("docs/reference/engine/scene-gameentity-scriptcomponent.md",), files=True,
          note="judges the scene files you named, or every live TAOM_Map scene under --all; "
               "a wall placed as a bare prefab instance is not judged"),
+    Gate("terrain-layers", "TAOM and TAOM_Map scene files", ("*/sceneobj/*/scene.xscene", "*tools/check_terrain_layers.py"),
+         ("python", "tools/check_terrain_layers.py"), ("docs/reference/terrain-layer-gate.md",), files=True,
+         note="a node that uses only flora layers (or none) in a season breaks the terrain shader compile; "
+              "the faults listed in KNOWN_FAULTS in the tool are tolerated, with their reasons"),
 )
 
 
@@ -494,7 +498,10 @@ def command_for(gate: Gate, paths, all_mode: bool) -> list:
     argv = [a.replace("{taom_module}", _taom_module()) if "{taom_module}" in a else a for a in gate.cmd]
     if gate.files and not all_mode:
         # a deleted file still selects the gate but cannot be validated; the gate runs bare if none is left
-        argv += [p for p in paths if matches(gate, p) and (REPO / p).exists()]
+        # a gate's own script can match its glob; it is the checker, not a file to check
+        own = {a.lower() for a in gate.cmd if a.lower().endswith(".py")}
+        argv += [p for p in paths if matches(gate, p) and (REPO / p).exists()
+                 and not any(p.replace("\\", "/").lower().endswith(o) for o in own)]
     return argv
 
 

@@ -338,6 +338,12 @@ class SelectionTests(unittest.TestCase):
             self.assertEqual(dg.command_for(gate, [str(scene), TROOPS], all_mode=False)[2:], [str(scene)])
             self.assertEqual(dg.command_for(gate, [str(scene)], all_mode=True), list(gate.cmd))
 
+    def test_the_terrain_gate_runs_bare_when_only_its_own_script_changed(self):
+        g = next(g for g in dg.GATES if g.id == "terrain-layers")
+        own = "tools/check_terrain_layers.py"
+        self.assertEqual(dg.command_for(g, [own], False), ["python", own])
+        self.assertEqual(dg.command_for(g, ["tools\\check_terrain_layers.py"], False), ["python", own])
+
     def test_a_file_gate_receives_only_the_files_that_match_it(self):
         g = next(g for g in dg.GATES if g.id == "xml-schemas")
         argv = dg.command_for(g, [TROOPS, "README.md"], all_mode=False)
