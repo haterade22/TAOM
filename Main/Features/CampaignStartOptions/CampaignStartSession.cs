@@ -16,11 +16,11 @@ public sealed class CampaignStartSession : ICampaignStartSession
     private readonly CampaignStartOptionsStore _store;
     private readonly ICampaignStartDefaults _defaults;
     private readonly IModLogger _logger;
-    private readonly IFactionPowerSettings _factionPower;
+    private readonly IFactionPowerSession _factionPower;
 
     public CampaignStartSession(
         IAdvancedStartDataAdapter data, CampaignStartOptionsStore store, ICampaignStartDefaults defaults, IModLogger logger,
-        IFactionPowerSettings factionPower)
+        IFactionPowerSession factionPower)
     {
         _data = data;
         _store = store;
@@ -32,8 +32,9 @@ public sealed class CampaignStartSession : ICampaignStartSession
     public void Begin()
     {
         _store.Reload();
-        _factionPower.Reload();
-        if (_data.IsAvailable && _data.IsNewCampaign)
+        var isNewCampaign = _data.IsAvailable && _data.IsNewCampaign;
+        _factionPower.Begin(isNewCampaign);
+        if (isNewCampaign)
         {
             Pin();
             _store.Reload();

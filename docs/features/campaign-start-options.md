@@ -77,6 +77,12 @@ follow MCM. The two presets are defined once, in `AlignmentRules` (`Strict`, `Re
 A preset fixes only these four master switches; the "Apply to player / AI / parties / garrisons" sub-switches and
 "Only Good Rejects Evil" keep following MCM. Strict equals the shipped MCM defaults, so it only matters when MCM was changed.
 
+### Realm power
+
+The screen also carries a "Realm power" category (a preset list and one slider per realm), pinned at campaign start by
+`FactionPowerSession`, which `CampaignStartSession.Begin` calls. It keeps its own stored keys (`taom_fp_<culture>`), not
+`taom_cso_*`. See [faction-power.md](faction-power.md).
+
 ### Mismatch message
 
 `CampaignStartOptionsBehavior` (declared by `CampaignStartOptionsModule`, one instance per campaign start) listens to

@@ -38,6 +38,7 @@ public class FactionPowerWiringTests
         Assert.IsNotNull(container.Resolve<FactionPowerEditor>());
         Assert.IsNotNull(container.Resolve<IFactionPowerPartyHook>());
         Assert.IsNotNull(container.Resolve<IFactionPowerEconomyHook>());
+        Assert.IsNotNull(container.Resolve<IFactionPowerSession>());
         Assert.IsNotNull(container.Resolve<IFactionPowerStrikeHook>());
     }
 
@@ -57,7 +58,8 @@ public class FactionPowerWiringTests
         var data = new FakeAdvancedStartData { IsAvailable = false };
         var logger = Substitute.For<IModLogger>();
         var store = new CampaignStartOptionsStore(data, logger);
-        var session = new CampaignStartSession(data, store, Substitute.For<ICampaignStartDefaults>(), logger, settings);
+        var session = new CampaignStartSession(data, store, Substitute.For<ICampaignStartDefaults>(), logger,
+            new FactionPowerSession(data, new FakeFactionPowerCatalog("gondor"), settings, logger));
 
         session.Begin();
 

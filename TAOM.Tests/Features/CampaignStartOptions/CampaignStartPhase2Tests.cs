@@ -131,7 +131,7 @@ public class CampaignStartPhase2Tests
         _data.Values[CampaignStartOptionKeys.AlignmentPresetOption] = CampaignStartOptionKeys.AlignmentStrictItem;
         var store = Store();
 
-        new CampaignStartSession(_data, store, _defaults, _logger, Substitute.For<TAOM.Features.FactionPower.IFactionPowerSettings>()).Begin();
+        new CampaignStartSession(_data, store, _defaults, _logger, Substitute.For<TAOM.Features.FactionPower.IFactionPowerSession>()).Begin();
 
         Assert.AreEqual(true, store.MomentumVictory);
         Assert.AreEqual(true, store.EyeOfSauron, "left alone: the default");

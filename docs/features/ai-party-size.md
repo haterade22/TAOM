@@ -267,6 +267,11 @@ values that were already live in memory.
 One genuine limit: raising the cap lets an existing party stop shedding and grow again. It does not
 retroactively refill it, because the roster was drawn at spawn.
 
+### Per-realm power
+
+[faction-power.md](faction-power.md) scales this limit per realm (50 to 200 percent) after the Large AI armies factor
+and before the flat bonuses; the order is pinned in `AiPartySizeOrderingTests`. The player's clan is never scaled.
+
 ### Player clans
 
 `Apply Party Size To Player Clan` decides whether your own lord parties collect the multiplier and flat
