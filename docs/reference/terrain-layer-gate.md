@@ -39,6 +39,19 @@ is what keeps a later copy from bringing the fault back.
   node (0,3), and the fall entry of `taom_dwarves_battle_001_forceatmo` (15 nodes, mask 1, layer 0
   `rock_cliff` flagged flora in fall only; whether the fall variant compiles at load is unverified). Remove an
   entry when its scene is fixed. `--no-known` reports them as faults.
-- Exit 0 clean, 1 a fault, 2 NOT RUN (no install, no scene, a file that does not parse), 3 crash.
+- Known entries are keyed on scene, node, season and mask; one that matches nothing in a scene that was read is
+  printed as `STALE known fault ...: remove it` (exit code unchanged).
+- Exit 0 clean, 1 a fault, 2 NOT RUN (no install, no scene, a file that is not a `scene.xscene`, does not
+  parse, or a terrain with nodes but no mask), 3 crash. Each NOT RUN reason is an `ERROR:` line. One bad file
+  does not hide the faults in the others: a fault wins with exit 1. The summary counts scenes, nodes and masks.
 - `tools/data_gates.py` runs it as gate `terrain-layers` for a changed or named `scene.xscene`.
 - Tests: `tools/tests/test_check_terrain_layers.py`.
+
+## Open question
+
+Which season's mask and flags the engine's shader generator reads when it builds the terrain variant is
+unverified: that code is native and Ghidra is not set up here. The tool judges each season with its own flags.
+The dwarves battle 001 case (layer 0 flora in fall only) exists only under that reading; if the generator reads
+one fixed season, a fall-only flag is harmless and those 15 entries can go. To settle it: note the campaign
+season of a Helm's Deep load that showed the popup (layer 0 is flora in summer only there, so a popup in
+another season would point to a fixed season), or decompile `rglTerrain_shader_generator` with the native decompile tool.

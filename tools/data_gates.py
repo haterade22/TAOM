@@ -498,7 +498,10 @@ def command_for(gate: Gate, paths, all_mode: bool) -> list:
     argv = [a.replace("{taom_module}", _taom_module()) if "{taom_module}" in a else a for a in gate.cmd]
     if gate.files and not all_mode:
         # a deleted file still selects the gate but cannot be validated; the gate runs bare if none is left
-        argv += [p for p in paths if matches(gate, p) and (REPO / p).exists()]
+        # a gate's own script can match its glob; it is the checker, not a file to check
+        own = {a.lower() for a in gate.cmd if a.lower().endswith(".py")}
+        argv += [p for p in paths if matches(gate, p) and (REPO / p).exists()
+                 and not any(p.replace("\\", "/").lower().endswith(o) for o in own)]
     return argv
 
 

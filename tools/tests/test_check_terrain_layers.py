@@ -127,20 +127,114 @@ class KnownFaults(Base):
 
     def test_every_entry_states_a_reason(self):
         for entry in ctl.KNOWN_FAULTS:
-            self.assertEqual(len(entry), 5, entry)
-            self.assertTrue(entry[4].strip(), entry)
+            self.assertEqual(len(entry), 6, entry)
+            self.assertTrue(entry[5].strip(), entry)
+
+    def test_the_known_entries_are_keyed_on_literal_nodes_with_no_wildcard(self):
+        dwarves = sorted((e[1], e[2]) for e in ctl.KNOWN_FAULTS if e[0] == "taom_dwarves_battle_001_forceatmo")
+        self.assertEqual(dwarves, sorted([(0, 3), (0, 9), (2, 0), (2, 13), (3, 13), (4, 12), (5, 0), (9, 0),
+                                          (12, 11), (12, 12), (13, 2), (13, 5), (13, 8), (13, 11), (13, 12)]))
+        for entry in ctl.KNOWN_FAULTS:
+            self.assertNotIn(None, entry)
+            self.assertEqual(entry[4], 1)
+
+    DWARVES = "taom_dwarves_battle_001_forceatmo"
+    FALL = layer("rock_cliff", flora=("fall",)) + layer("rock")
+
+    def test_a_dwarves_node_outside_the_fifteen_fails(self):
+        code, out, _ = self.run_tool(scene(self.FALL, node(7, 7, 1)), folder=self.DWARVES)
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL taom_dwarves_battle_001_forceatmo node (7,7) fall mask 1", out)
+
+    def test_a_listed_dwarves_node_is_known_in_fall_with_mask_1(self):
+        code, out, _ = self.run_tool(scene(self.FALL, node(0, 3, 1)), folder=self.DWARVES)
+        self.assertEqual(code, 0, out)
+        self.assertIn("KNOWN taom_dwarves_battle_001_forceatmo node (0,3) fall mask 1", out)
+
+    def test_helms_deep_flora_only_in_fall_is_a_new_fault(self):
+        fall_flora = layer("default", flora=("fall",)) + layer("rock")
+        code, out, _ = self.run_tool(scene(fall_flora, node(0, 3, 1)),
+                                     folder="taom_rohan_castle_helms_deep_forceatmo")
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL taom_rohan_castle_helms_deep_forceatmo node (0,3) fall mask 1", out)
+
+    def test_a_known_node_with_another_mask_is_a_new_fault(self):
+        two_flora = layer("default", flora=("summer",)) + layer("b", flora=("summer",)) + layer("rock")
+        code, out, _ = self.run_tool(scene(two_flora, node(0, 3, 3)),
+                                     folder="taom_rohan_castle_helms_deep_forceatmo")
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL", out)
+
+    def test_an_entry_that_matches_nothing_in_a_read_scene_is_stale(self):
+        code, out, _ = self.run_tool(scene(self.TWO, node(0, 3, 3)), folder="taom_rohan_castle_helms_deep_forceatmo")
+        self.assertEqual(code, 0, out)
+        self.assertIn("STALE known fault taom_rohan_castle_helms_deep_forceatmo node (0,3) summer mask 1", out)
+        self.assertIn("remove it", out)
+
+    def test_an_entry_for_a_scene_that_was_not_read_is_not_stale(self):
+        code, out, _ = self.run_tool(scene(self.TWO, node(0, 3, 3)), folder="other_scene")
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("STALE", out)
 
 
 class NotRun(Base):
     def test_a_file_that_does_not_parse_is_not_run(self):
         code, _, err = self.run_tool("<scene><terrain")
         self.assertEqual(code, 2)
-        self.assertIn("NOT RUN", err)
+        self.assertIn("ERROR:", err)
 
     def test_a_missing_file_is_not_run(self):
         err = io.StringIO()
         with redirect_stderr(err):
             self.assertEqual(ctl.main(["no/such/scene.xscene"]), 2)
+        self.assertIn("ERROR:", err.getvalue())
+
+    def test_a_file_not_named_scene_xscene_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "tools" / "check_terrain_layers.py"
+            path.parent.mkdir()
+            path.write_text("print('x')", encoding="utf-8")
+            out, err = io.StringIO(), io.StringIO()
+            with redirect_stdout(out), redirect_stderr(err):
+                code = ctl.main([str(path)])
+        self.assertEqual(code, 2)
+        self.assertIn("ERROR:", err.getvalue())
+        self.assertIn("scene.xscene", err.getvalue())
+
+    def test_one_broken_file_does_not_hide_a_fault_in_another(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            good = Path(tmp) / "a_scene" / "scene.xscene"
+            bad = Path(tmp) / "b_scene" / "scene.xscene"
+            for p, xml in ((good, scene(FloraOnlyNodes.TWO, node(0, 3, 1))), (bad, "<scene><terrain")):
+                p.parent.mkdir()
+                p.write_text(xml, encoding="utf-8")
+            out, err = io.StringIO(), io.StringIO()
+            with redirect_stdout(out), redirect_stderr(err):
+                code = ctl.main([str(bad), str(good)])
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL a_scene node (0,3)", out.getvalue())
+        self.assertIn(f"ERROR: {bad}", err.getvalue())
+
+    def test_a_terrain_with_nodes_but_no_mask_is_not_run(self):
+        xml = ('<scene><terrain node_size="150"><layers version="1"></layers>'
+               '<nodes><node idx="0" idy="0"><data/></node></nodes></terrain></scene>')
+        code, _, err = self.run_tool(xml)
+        self.assertEqual(code, 2)
+        self.assertIn("ERROR:", err)
+        self.assertIn("no layer_is_used_mask", err)
+
+    def test_the_summary_counts_nodes_and_masks(self):
+        code, out, _ = self.run_tool(scene(FloraOnlyNodes.TWO, node(0, 0, 3) + node(1, 0, 3)))
+        self.assertEqual(code, 0, out)
+        self.assertIn("1 scene(s) read, 2 node(s), 8 mask(s) judged", out)
+
+    def test_a_flora_only_node_after_many_entities_is_still_found(self):
+        """The stream frees elements as it goes; the layers and nodes must survive that."""
+        entities = "<entities>" + "".join(f'<entity name="e{i}"><x/></entity>' for i in range(200)) + "</entities>"
+        xml = scene(FloraOnlyNodes.TWO, node(0, 3, 1)).replace("<terrain", entities + "<terrain", 1)
+        code, out, _ = self.run_tool(xml)
+        self.assertEqual(code, 1)
+        self.assertIn("node (0,3) summer mask 1", out)
 
     def test_a_missing_install_is_not_run(self):
         with tempfile.TemporaryDirectory() as tmp:
