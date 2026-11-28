@@ -395,6 +395,57 @@ fitted to the unscaled rig.
 **Not yet checked in game** (the steps are in [How to verify in game](#how-to-verify-in-game)): where the dwarf stands on the cart, the collar and the reins in a gallop and in a
 turn, the far LODs, the team colour on the cloth, and the two troops in a battle.
 
+### Dwarven and orc chariots: decisions of 2026-11-27
+
+State: a plan. Nothing of it is built into the game or installed in `AssetSources`; only the test lanes of the work
+folder ran. The maintainer's next jobs after the two repairs, at 17:10: "The next thing I want to move onto is two
+fold. Dwarven chariots (pulled by rams) and then Orc chariots (pulled by wargs)". His picks, from pages of concept
+pictures made by the image connector in generic words:
+
+- **Scope (17:36):** bring the two present dwarven chariots (a and b) to the standard of the Rhûn sets and add three
+  new sets, with a ram barding of the sets' own for each. Orcs: Gundabad first; wargs at about 0.8 size on the
+  present rig, "if the proof stills look right".
+- **Dwarven sets (17:40):** (c) the low riveted steel cart, without the spike at the front ("it looks too abnormal"),
+  with a dwarven shield from the Armory on its front in place of the round boss; (d) the blue enamel lord's car ("Hell
+  yeah, this is cool!"), the pilot; (e) the axe-wheel car with walls of metal shields. Out: the rune-keeper's car
+  ("This is too fantasy like warhammer dwarves and not tolkien dwarves") and the ore wain ("too plain").
+- **Shields (19:04, 19:05):** he circled Metal Shield VIII (`sm_dwarf_erebor_shield_metal_d2`) and Tower Shield VI
+  (`sm_dwarf_erebor_shield_tower_f`): "use these with gold, imo". The session's reading, told to him: Tower Shield VI
+  on the front of c and Metal Shield VIII for the axe-wheel car's walls. Of fewer, larger
+  shields in a wall: "its fine to hold lower shields, but the shields also have to serve a purpose, to protect the
+  inside". The builders' pass clause: seen from outside at the crew's height, no line of sight into the cart between
+  or under the shields.
+- **Gundabad sets (18:07):** the scrap raider, the bone and hide car and the orc-steel war car. Out: the goblin
+  runner and the snow hunter's car.
+
+Two measurements on the bare rams change the harness. The horn shafts touch the present yoke in both neck turns and
+with the head up (0.000 to 0.001 m), and the ram's skin lies 0.034 and 0.035 m from the present pole at the hip. So
+the new sets get a round oak pole of 0.076 m with no fitting at the hip, and a yoke that stands wholly behind the
+rams' horn line and that the two rams carry. A test build of that harness on the bare rams passed its lines except
+the pole at the hip in the right gallop turn, which is the rig's own limit; after one send-back the yoke strap,
+hame and girth joints read as made and the collar does not (the bridle only half), at about twice the triangle budget;
+the fitting moves to the barding of set d.
+
+A warg does not fit the rig's horse bones at any uniform scale. In proof 1 the best joint fit was at scale 0.74, with
+0.276 m of RMS error and a gap of 0.749 m at the head. The chariot clips key rotations only (one root position track a
+master), so proof 2 built a twin of the rig: 60 bones with the rig's names and rest axes, the animal bones' positions
+moved to the warg's joints. At scale 0.80 it plays the clips as a running warg, with the bodies 4 mm apart, the lowest
+foot 2 to 20 cm into the ground in every gait and the idle clip tipping the nose down 60 degrees; at 0.76 the bodies are
+4.2 cm apart. Proof 2's verdict was that this twin is the only workable one, that the leg cycles and a ground offset have
+to be made, and that 0.76 is the safer pick. The night's decision (20:04) is the twin at scale 0.76.
+
+The engine note (`out\warg_team\ENGINE_NOTE_2026-11-27.md` in the work folder) grades what it found. Certain: the
+`Monster` type has no skeleton field, the skeleton model comes from the action set record, and a master's tracks are read
+by slot order and never remapped by name, so nothing binds a clip to a skeleton by name at run time. Likely: the rest
+positions come from the agent's own skeleton. Not verified: the native pose sampler (where a bone without a position key
+takes its rest position from), a `base_set` child that names another skeleton, and how the reins and the present carts
+render on the twin. A cost it names: the clip records keep the horse's travel per loop, so the shorter warg legs slide
+unless 18 cloned clip records with scaled travel are bound; if the test says no, each clip is exported again for the
+twin. A test package is ready in the work folder (`out\warg_team\kit_test`): one skeleton and mesh file with 60 bones
+(proved by a re-import; the mesh has six LODs from 49,050 to 830 triangles), the test rows with an apply and remove
+script (run on copies only), and 43 steps in six parts. Nothing was tried in the Kit or the game. The test in the
+Modding Kit and a custom battle is the maintainer's step, and no orc art starts before it.
+
 ## Rhûn cart variants and new horse armours (in work since 2026-11-24)
 
 Five more carts for the harness slot of this rig (B to E in new designs, F in cart A's design in black) and five
@@ -769,6 +820,119 @@ LOD3 with the head down; on cart E at LOD3 about 110 cm2 more near-coplanar area
 which the engine may show as flicker and no check here can test. The horned armour's far levels and chest plate
 and three points of the lacquer armour's far levels are in work. Nothing of this section was checked in the game.
 
+**Horned set, far levels (armour 4), 15:00 to 16:48 on 2026-11-27: no candidate.** A lane tried three repairs and a weights step.
+The LOD2 haunch (A2) fell from 132.5 to 44.0 cm2 of backing over the strips (from above and behind), short of the
+target of 27.0, and did not move in the second attempt.
+The LOD1 face plate (A3) failed the culling gate G14: 2 plate-through-plate faces seen at LOD1 against 0 on the
+installed build. The LOD4 and LOD5 neck lames (A4) failed two proofs: the vertices more than 3 mm under the skin,
+summed over 180 poses, rose from 41 to 114 at LOD4 and from 0 to 126 at LOD5, and the area that should be covered
+grew from above and behind at LOD4 (36,962.6 to 39,167.3 cm2, summed over the poses). Weights alone for the collar
+and the lower chest plate stretched the plate by 86.1 to 278.1 percent at its worst frame. Nothing was installed and
+no candidate folder was written; `rhun_war_chariot_e.fbx` in `AssetSources` is unchanged by this lane. A set E build
+that takes the poll end and the splay away at LOD4 and LOD5 stays in the work folder, for the maintainer's look only.
+
+**His second look at the lacquer and sun sets, 2026-11-27.** After he updated the meshes in the editor (about 17:08)
+he looked at the sets again and sent two Kit pictures at about 17:10, one of each set. The sun set's
+checks of the day had looked from 7 m straight above and from the side and measured red cloth, and none had rendered
+his view; no check had looked at the junction of the lacquer set's back plate and its rump shell. The checks that came
+from this are under "Gates and reviews". His update of both repaired meshes in the Kit is owed.
+
+- **Lacquer set (set D v25: armour 3 v20), installed 19:15, mesh only.** His first picture showed the withers from
+  above with the gold rim of the neck piece circled: "the upper part needs to be pulled UP above the horses back
+  armor as right now it is too far down and clips". The session read it as the neck piece's end lying on the back
+  armour. The builder measured the installed file and found no fault there: the neck end and the back plate are 134.1
+  to 164.6 mm apart at every level, with 0 crossings. A render of the whole back from the yoke to the tail showed the
+  junction of the back plate's rear rim with the rump shell, with small red teeth through the gold rim. The session
+  put its picture of that junction in front of him; he drew "M" on the smooth back plate, "B" on the banded rump
+  part and "PULL UP" at the back plate's rear rim, and wrote: "Set D, the middle horse armor towards the back needs
+  to be pulled UP past the but armor". Cause: both plates sit on one back field, and the back plate's last cell
+  (about 10 cm long at LOD0, longer below) spanned the rump shell's front edge with straight chords over the shell's
+  column kinks, so band edges of the shell stood through the rim: teeth at LOD0 (11 samples where the plate's outer
+  face lay under the shell, 2.77 mm at the deepest), wide notches at LOD1 to LOD5, and a 7
+  to 15 mm slot at the sides. Repair: the back plate's rear columns now bend onto the shell's columns and its rear
+  rows lie about 5.5 mm over the shell, mirrored left to right, with no vertex moved afterwards; no map changed. He
+  saw the repair at rest in the view he had drawn on and wrote "looks good!" (18:54). The gap of the rim over the
+  shell at rest, in mm (least to greatest; negative means the plate's inner face lies under the shell's outer face), from the builder's table (rays
+  every 5 mm of arc, 3 mm inside the rim) and from the check's own run (samples every 2.5 mm along the rim):
+
+  | LOD | Before (builder) | After (builder) | After (check) | Crossings, back plate and shell, before to after |
+  |---|---|---|---|---|
+  | 0 | -6.81 to 15.43 | 4.86 to 11.32 | 4.36 to 6.08 | 90 to 0 |
+  | 1 | -20.16 to 12.61 | 5.06 to 7.58 | 4.85 to 8.23 | 140 to 0 |
+  | 2 | -24.25 to 6.35 | 5.07 to 7.90 | 4.91 to 8.89 | 140 to 0 |
+  | 3 | -27.91 to 3.37 | 4.95 to 9.12 | 4.80 to 8.88 | 112 to 0 |
+  | 4 | -35.39 to 25.28 | 4.81 to 12.83 | 4.02 to 7.80 | 100 to 0 |
+  | 5 | -53.56 to 5.15 | 5.27 to 6.92 | 4.67 to 11.77 | 24 to 0 |
+
+  The check (a separate read-only reader, 19:16) said READY: one unbroken gold line at LOD0, LOD1 and LOD4 on both
+  horses, 0 samples under 2 mm, left equal to right within 0.001 mm, and nothing changed outside the back plate, the
+  four (LOD0) or three (LOD1) flank hanger strap islands, the LOD4 lining, the LOD5 end lame and 19 of 70 LOD5
+  lining vertices (moved up to 5.96 mm). Triangles, LOD0 to LOD5: 58,321; 44,567; 27,497; 16,301; 6,958; 4,640.
+  Installed 19:15:47; the set file `rhun_war_chariot_d.fbx` is now `aba28d42`; the nine maps are byte equal to the
+  installed ones. **Open limit, his decision.** In the clips the back plate follows `horsespine2` and the rump shell
+  `horsespine1`, which turn against each other by up to 17.2 degrees in the dash, 13 to 15 degrees in the turns and 7.8
+  to 10.4 degrees in the walk, trot and idle. The two plates cross in all 88 idle frames on the installed build and on
+  the repair; the worst crossing at LOD0 falls from 42.25 to 36.13 mm on the left horse (builder) and from 40.15 to
+  33.71 mm (check). A weights-only cure was measured and rejected. Its best form (the shell's front on
+  `horsespine2`, a ramp to its own bone) gave 0 crossings in all 494 poses of the gate poses, the idle clip and the
+  gait clips, with a rim gap of at least 4.82 mm; but the shell's edges change by 10.7 to 16.9 percent in the idle
+  clip and 28.4 to 30.7 percent in the gaits (41.6 percent at LOD5), and the shell goes under the skin in 71 to 88 of
+  88 idle frames, up to 32.78 mm. A lift that cleared the idle clip would leave about 30 to 40 mm of slot at rest. A
+  cure needs a change of form (the two plates as one piece, or a wider lap with a flexible band between them), and
+  the look of that is the maintainer's decision.
+- **Sun set (set C v30: armour 2 v23e), installed 22:20, the mesh and three armour 2 maps.** His Kit picture of the
+  set from above and behind showed five regions circled down each neck: "this is jacked up,
+  probably needs triplo to fix it as it seems like it is overlapping instead of being one piece. Like its multiple
+  pieces put together". It was his second rejection of this neck that day, so the session took the neck apart before
+  a third patch ([the record](../knowledge/teardowns/2026-11-27-sun-armour-neck.md)). The installed neck had six lame
+  islands a side, each with five painted flutes, which read as many thin strips, and their lower edges cut into the
+  next lame (a lap gap of -5.7 to 0.6 mm at LOD0). He then held up a close picture of the black set's neck, wide
+  black bands with a gold rim, and said: "I think they should be like this or one piece , in my opinion or your best
+  recommendation". The session chose the band stack and dropped the one piece reading. The neck is rebuilt as eight
+  wide bands at LOD0 (6, 6, 4 and 2 at LOD1 to LOD4; LOD5 keeps the old neck) by the black neck's own builder on one
+  smooth field. Before and after at LOD0: lap gap -5.7 to 0.6 mm to 6.7 to 11.4 mm of air; band mirror error 0.055 mm
+  at the median to 0.0 mm; neck triangles 1,376 to 1,500 (limit 1,513). A sheet of the first
+  build with two rim looks (a gold bead, or a narrow red lacquer edging) brought his answer "these are way better!"
+  (18:20); he named no rim. The session chose the red edging for the install and kept the gold bead maps beside it.
+  - *The first check said NOT READY (20:52).* At rest, in the turns and with the head down, red cloth on or between
+  the bands was 0.00 cm2 at LOD0 and LOD2 to LOD4 (from above and in the k7 view); from his view at LOD1 it was 0.34,
+  0.18 and 0.36 cm2 (two specks at the last rear rim). In the idle clip, frames 207 to 219 (the head low), from his view, the lining
+  showed through the bands and between them: 21.29 and 12.77 cm2 at LOD0, 30.62 and 19.73 cm2 at LOD1, on the left
+  horse. The new bands stood apart like shingles with dark slots between them, and the gaps between the bands were
+  larger than the installed neck's (12.77 against 3.55 cm2 at frame 211, LOD0).
+  - *The cause.* The session had written "each band rigid on one bone mix" into two orders without reading the design
+  file. The builder read it: every band vertex already carries the smooth skin weight field (528 vertices in 273 weight
+  sets at LOD0), as the installed lames do. Its test carried the rest shape onto the posed neck as one rigid block and
+  saw more lining, 52.4 to 56.8 cm2 against 31.3 to 35.1 cm2 posed (frames 207, 211, 215, 219), so the openings are not
+  motion between the bands. Each band lies on the next toward the withers with a lap of 22 to 29 mm at the crest, so
+  every slot opens toward the driver, and with the head low he looks into the slots. At frame 211 (LOD0, through and
+  between, largest band stretch): installed 28.91 and 3.55 cm2, 53.2 percent; as built 21.22 and 12.77, 76.4 percent;
+  half way to rigid 25.21 and 24.89, 34.4 percent; rigid 30.80 and 52.41, 8.1 percent. The weights as built are the best
+  of those tested.
+  - *The decision (21:04, the night's rule to go with the recommendation).* The lap direction and the band shapes he
+  approved stay, and the red lining is replaced by a matt dark liner, so that no red cloth shows by colour in any pose. The
+  builder's note: in the lit render of frame 211 the openings already read as dark lines before the change (the lit
+  pictures differ by 50 pixels at LOD0 and 7,852 at LOD1), so the change shows in the colour probe and little in the lit
+  view. Liner: colour (34, 34, 33) with a grain of plus or minus 2, linear luminance at most
+  0.0176 (about that of armour 2's darkest leather swatch, (49, 31, 22), with the red taken out), specular metal 0,
+  gloss 25, a flat normal. Only the lining's tile and 6 pixels of padding changed (215,384 pixels in `_d` and `_s`,
+  27,457 in `_n`; 0 outside), in both rim map sets. At LOD1 a vertex of band 4 lay inside band 3, because the two bands' columns stand at different angles, and the
+  bands crossed at their side ends (84 and 72 crossing points); band 4 was rebuilt on its neighbours' angles: 0.
+  - *The second look said READY (22:19, the same checker).* Red by colour on the bands and the lining with the gold
+  bead maps: 0.00 cm2 at rest, in the four gate poses and in 175 idle frames, both horses, three views, LOD0 to LOD4.
+  The same probe gives 111.72 cm2 (LOD0, the largest value) on the installed neck, and on the first candidate
+  33.98 cm2 at frame 211 on the left horse at LOD0 and 49.08 cm2 at most (LOD1); with the red edging maps the only red on the neck is the edging on the rims. In idle frames 207 to 219 the
+  dark liner shows 32.45 cm2 at the mean (33.99 at the most) at LOD0 and 42.34 (43.72) at LOD1, where the installed
+  neck's red lining showed 33.30 (35.03) and 52.33 (53.79); the horse's skin shows 7.05 (9.09) and 8.16 (9.66) cm2 at the
+  lower band ends on the near side, against 0.14 (0.36) and 0.51 (1.05) on the installed neck. Triangles, LOD0 to LOD5:
+  60,052; 45,395; 28,513; 17,332; 7,294; 5,347. Installed 22:20:32: the set file `rhun_war_chariot_c.fbx` is now
+  `9b72a9be`, with `rhun_horse_armour_2_d`, `_n` and `_s`; the six cart maps are byte equal to the installed ones.
+  - *Known limits.* The plates fan open as dark slots when the head drops, with 7 to 10 cm2 of skin at the lower band
+  ends; the red edging reads as red lines across the neck from the driver's seat (the gold bead maps change that with
+  a map update only); LOD1 sits about 10 mm closer to the yoke than the installed neck, with no contact found; at LOD2
+  the bands 3 and 4 still cross (44 and 50 points), a small notch close up and not from 13.8 m; LOD5 keeps the old
+  neck. Not checked: the Kit, the game and the gait clips.
+
 **Cart A without its quiver and javelins, 2026-11-26.** Of the cart that is in the game he said: "Cart A, we can
 remove the quiver and javelins and save on some triangles. They dont really do anything." Build v06 of
 `rhun_war_chariot` has no javelin case and javelins on the right wall and no bow case and arrows on the left wall,
@@ -995,6 +1159,16 @@ The gates passed every version he rejected, so an independent review runs before
 1 v29 (`wf_8d001b87-5ca`): four reviewers with one scope each, a checker each that tries to refute; 381 views, 60
 confirmed (26 at normal distance, 34 close up only), 3 refuted, 20 added. Groups A, B (LODs), C required; D to him.
 
+**Checks added on 2026-11-27 (the session's, from the two repairs of his second look).**
+
+- Every check of a neck, or of a junction of two armour parts, renders the view the maintainer looks from: close,
+  above and behind the withers, lit, at LOD0 and LOD1, at rest and in the idle clip's head-low frames (about 207 to
+  219 of `chariot_idle_1`). The session looks at that picture before an install.
+- The liner under a stack of bands or plates is matt and dark, so that no red cloth shows by colour in any pose. A red liner failed the sun neck's first check and
+  a matt dark one passed the second; the lit look of the openings changed little (by 50 pixels at LOD0).
+- A cause stated in an order is read from the file that holds it first. The sun neck's "rigid bands" went into two
+  orders unread; the design file showed the bands already on the smooth skin weights.
+
 **Textures.**
 
 - Carts: wood from the modules' wood source textures, projected along each piece's grain and tone-mapped to the dark
@@ -1098,6 +1272,7 @@ no missing mesh or material line in the log. Then, for each set, the two checks 
 
 ## Changelog
 
+- 2026-11-27: Two repairs from the maintainer's second look in the Kit are in `AssetSources`. The lacquer set's back plate lies over the rump armour with one unbroken gold rim at every level (set D v25, mesh only, 19:15); in the game's clips the two plates still cross, and a cure needs a change of form. The sun set's neck is eight wide bands over a matt dark liner in place of thin strips over red cloth, and no red cloth shows in any pose measured (set C v30, the mesh and three armour 2 maps, 22:20); when the head drops the plates fan open as dark slots, 7 to 10 cm2 of the horse's skin shows at the lower band ends, and the red edging reads as red lines across the neck. His update of both meshes and the three maps in the Kit is owed.
 - 2026-11-27: The sun set's neck no longer shows red through or on its lames at any level, and its head has one strap round the ears (set C v26: the mesh and two armour 2 maps). The red that stayed after the cloth was lowered was paint in the lame texture from an older bake. Cart B's slit beside the floor is closed too. With this, every order of the maintainer's look in the Kit is in `AssetSources`; the updates in the Kit and the check in game are owed.
 - 2026-11-27: Four far level repairs are in `AssetSources`, meshes only: carts A and E no longer open a slit beside the floor at the middle levels, the black set's cape covers the croup at the two farthest levels, and the raider armour's bridle stays under the first neck lame. The sun set stays open: its neck is clean in geometry, but the lames' texture holds red pixels from an older bake, and two strap ends are short at three levels. The update in the Kit and the check in game are owed.
 - 2026-11-27: The maintainer looked at the imported sets in the Kit from above. The lacquer set's neck lames no longer show cloth at any level (set D v23), the horned set has a strap from the face plate to the neck armour and a pole without spears (set E v18), and the raider and black sets hold together in motion (weights only). All four are in `AssetSources` and updated in the Kit, with cart A's mesh of 2026-11-26. The sun set's neck and head are open. The check in game is owed.

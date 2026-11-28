@@ -17,6 +17,12 @@ method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-n
 date = 2026-11-26
 
 [[evidence]]
+grade = "measured"
+value = "Armour 2 neck bands, LOD1: bands 3 and 4 crossed at their side ends in 84 and 72 places at rest because a vertex of band 4 lay inside band 3: the two bands' columns stand at different angles and the radius carries a chord allowance, so a column vertex of band 4 stood out where band 3 has a chord middle. Building band 4 on its neighbours' column angles gave 0 crossings."
+method = "the teardown record docs/knowledge/teardowns/2026-11-27-sun-armour-neck.md; the lane's k/c22_cross.py and its record of 21:15, in the asset work folder, outside the repo"
+date = 2026-11-27
+
+[[evidence]]
 grade = "maintainer"
 value = "the only problem is this is messed up and not straight and then the armor and cart are good after this fix."
 date = 2026-11-26
@@ -28,6 +34,9 @@ scope = "armour 5 only"
 
 [[source]]
 teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+teardown = "2026-11-27-sun-armour-neck"
 
 [[source]]
 maintainer = "2026-11-26"

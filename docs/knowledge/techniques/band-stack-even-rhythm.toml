@@ -22,9 +22,28 @@ value = "Ours: v16 spread 0.068, tilt -7.4 to +3.8 degrees. v18ay with its colla
 method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-neck-and-head.md; the probe td_probe.py and its crest scripts are kept with the asset job, outside the repo"
 date = 2026-11-26
 
+[[evidence]]
+grade = "measured"
+value = "Armour 2 neck bands (v23): crest pitch spread 0.092, 0.091, 0.089 and 0.065 at LOD0 to LOD3 against 0.0875 on the lames they replaced (v22) and 0.104 on the approved armour 5; tilt 5.1 to 9.0 degrees at LOD0."
+method = "the teardown record docs/knowledge/teardowns/2026-11-27-sun-armour-neck.md; the shape measure neckm.py of lane 22 (the probe td_probe.py's crest code copied), in the asset work folder, outside the repo"
+date = 2026-11-27
+
+[[evidence]]
+grade = "inferred"
+value = "The session dropped the 0.05 target for this neck at 18:17 on 2026-11-27, because the approved armour 5 measures 0.104. It is the session's decision, not the maintainer's word."
+method = "the row of this entry in the teardown record, section Not taken"
+date = 2026-11-27
+
 [[acts]]
 state = "instance"
 where = "build_lames in rharmb_crinet.py, a module of the horse armour builders in the asset work folder that only armour 5 calls"
 
+[[acts]]
+state = "instance"
+where = "rharm2_neck23.py, the module that builds the neck bands of armour 2 (the asset work folder, outside the repo)"
+
 [[source]]
 teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+teardown = "2026-11-27-sun-armour-neck"

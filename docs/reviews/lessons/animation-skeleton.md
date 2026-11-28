@@ -1878,3 +1878,49 @@ the cloth he had ordered gone.
 - **Source:** [chariot.md](../../features/chariot.md), "His look at the sets in the Kit from above", the sun set;
   the work folder's checks of set C of 2026-11-27 and its texture colour study (not in the repo). No issue: the
   maintainer waived the public issue for the chariot work.
+
+### A check must render the view the maintainer looks from (2026-11-27)
+After the repairs of the morning the maintainer looked at the sun and lacquer chariot sets again in the Kit, close and
+from above and behind the withers, and rejected both. The sun set's neck read as many thin strips with ragged ends
+(six lame islands a side, five painted flutes each); the lacquer set's back plate had red teeth through its gold rear
+rim where it lay over the rump shell (24 to 317 teeth samples at the levels of the installed build, 90 to 140 crossings
+at LOD0 to LOD3). The sun set's checks had looked from 7 m straight above and from the side; no check had looked at the lacquer set's
+junction of back plate and rump shell. The session's first
+reading of his lacquer picture was also wrong: it sent the builder to the neck end, where the measure found 134.1 to
+164.6 mm of clearance and no crossing, and the junction showed only when the builder rendered the whole back from the
+yoke to the tail.
+- **Why missed:** the sun set's checks measured red cloth and clearances from 7 m above and from the side. None
+  rendered the view he sees, and none looked at the junction of the back plate and the rump shell at all. A picture
+  of his that was not saved (the lacquer set's) was read by the session alone.
+- **Prevent:** every check of a neck, or of a junction of two armour parts, renders the maintainer's view (close, above
+  and behind the withers, lit, LOD0 and LOD1), at rest and in the idle clip's head-low frames, and the session looks
+  at that picture before an install. When a measure finds no fault where an order points, render the whole area in
+  that view, mark the suspect place on the picture and ask him, before building.
+- **Source:** [chariot.md](../../features/chariot.md), "His second look at the lacquer and sun sets"; the work
+  folder's check records of set C and set D of 2026-11-27 (not in the repo). No issue: the maintainer waived the
+  public issue for the chariot work.
+
+### A stack of bands that is clean at rest is looked at in the idle clip's head-low frames, and its liner is matt and dark (2026-11-27)
+The sun armour's neck was rebuilt as eight wide bands, and the maintainer called them "way better". The first check
+said NOT READY. At rest, in the turns and with the head down there was 0.00 cm2 of red cloth at LOD0 and LOD2 to LOD4 (at LOD1 from his
+view 0.34, 0.18 and 0.36 cm2, two specks); in the idle clip, frames
+207 to 219 (the head low), the lining showed through and between the bands: 21.29 and 12.77 cm2 at LOD0, 30.62 and
+19.73 cm2 at LOD1. The session had named the cause as bands rigid on one bone mix, and put it in two orders, to the neck
+builder and to a barding lane, without reading the design file. The builder read it: every band vertex already carries
+the smooth skin weights (528 vertices in 273 weight sets at LOD0), and a test that moved the rest shape onto the posed
+neck as one rigid block showed more lining, not less (52.4 to 56.8 cm2 against 31.3 to 35.1 cm2 posed). Each band laps
+the next toward the withers by 22 to 29 mm at the crest, so every slot opens toward the driver, and with the head low
+he looks into the slots. The cure was the lining: a matt dark liner (colour 34, 34, 33) in place of the red one. Red by
+colour fell to 0.00 cm2 in all 175 idle frames, and the second look said READY.
+- **Why missed:** the lane's checks measured rest, the turns and the head-down pose, and the head-low frames of the idle
+  clip are the one place where a lap that opens toward the viewer shows its slots. A bright liner turns each slot
+  into a red line, the red cloth he had ordered gone that morning. The cause went into the orders without a read of
+  the file that builds the neck.
+- **Prevent:** look at a neck of overlapping bands in the idle clip's head-low frames from his view before it goes to
+  a check. The liner under a stack of bands or plates is matt and dark. A cause that goes into an order is read from
+  the file that holds it first, and a test that separates view from motion (the rest shape carried rigidly onto the
+  pose) comes before a weights change.
+- **Source:** [chariot.md](../../features/chariot.md), "His second look at the lacquer and sun sets"; the teardown
+  record [2026-11-27-sun-armour-neck.md](../../knowledge/teardowns/2026-11-27-sun-armour-neck.md); the work folder's
+  lane and check records of set C of 2026-11-27 (not in the repo). No issue: the maintainer waived the public issue
+  for the chariot work.

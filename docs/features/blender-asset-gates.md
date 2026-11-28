@@ -132,6 +132,8 @@ the Rhûn chariot work of 2026-11-24 to 2026-11-26, after he saw the fault in Bl
 | A pointed part ends in one fine point | "These should end with a fine point.": crest fins that end blunt, with a thin needle on the blunt end | Width and thickness run out together toward the tip, so the outline narrows to one point |
 | Lines that should be straight are straight | "2 should be straight not bent": a neck strap with a kink and steps just before its buckle; strap and lining lines that wander | Level them by measurement; a check of every strap for a kink between its joints |
 | Rigid parts stay rigid in motion | A disc that doubles its length in a pose (found by the pose test, not by him) | One weight set per rigid island; edge lengths at 0.99 to 1.01 in every pose |
+| Dwarven craft is Tolkien's, not high fantasy | "This is too fantasy like warhammer dwarves and not tolkien dwarves" (a cart with broad rune bands), and of a spike at the front of a cart: "it looks too abnormal" (2026-11-27) | Stepped, square, geometric forms and clean worked metal. No rune bands and no odd spikes. A shield on a dwarven asset is one of the Armory's dwarven shields: "We have dwarven shields in our armoury to pick from" |
+| A shield on a vehicle protects the inside | "its fine to hold lower shields, but the shields also have to serve a purpose, to protect the inside" (2026-11-27, of fewer, larger shields in a cart wall) | Seen from outside at the crew's height, no line of sight into the cart between or under the shields |
 
 **A clearance gate must not be met with a hole.** On horse armour 5 two gates (a gap to the cart pole, and no
 contact with the cart's forks in a neck turn) were met by leaving plates out. The session accepted v15 because

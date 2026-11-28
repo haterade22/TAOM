@@ -17,17 +17,26 @@ method = "the teardown record docs/knowledge/teardowns/2026-11-26-horse-armour-n
 date = 2026-11-26
 
 [[evidence]]
+grade = "measured"
+value = "Armour 2 neck (v22, stock builder): 74.2 percent of faces over 30 degrees at LOD0, mirror error 0.068 mm at most. Rebuilt as bands on one smooth field (v23): 81.3 percent over 30 degrees (the share did not fall), mirror error 0.0 mm, every band vertex on the smooth skin weights."
+method = "the teardown record docs/knowledge/teardowns/2026-11-27-sun-armour-neck.md; the shares and mirror error from the shape measure neckm.py of lane 22, the weight sets from the builder's read of weights16 in rharm_design2.py (the lane's record of 21:03), in the asset work folder, outside the repo"
+date = 2026-11-27
+
+[[evidence]]
 grade = "maintainer"
 value = "Black neck piece needs to be reworked. it is all off"
 date = 2026-11-25
 
 [[acts]]
 state = "instance"
-where = "envelope in rharmb_crinet.py and the height field of rharmb_shell.py"
-scope = "called by armour 5 only: the stock plate builders (plate in rharmb_designs.py and rharm_designs.py) still call enforce_grid, so the old way is the default of armours 1 to 4"
+where = "envelope in rharmb_crinet.py and the height field of rharmb_shell.py; the same envelope (CR.envelope) is called by rharm2_neck23.py for the neck bands of armour 2"
+scope = "called by armour 5 and, since v23, by the neck bands of armour 2: the stock plate builders (plate in rharmb_designs.py and rharm_designs.py) still call enforce_grid, so the old way is the default of armours 1 to 4 outside armour 2's neck"
 
 [[source]]
 teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+teardown = "2026-11-27-sun-armour-neck"
 
 [[source]]
 maintainer = "2026-11-25"

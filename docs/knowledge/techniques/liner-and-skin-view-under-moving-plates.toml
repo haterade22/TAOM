@@ -1,6 +1,6 @@
 title = "Close rigid armour onto the body with a liner and a skin view check"
-line = "Rigid parts that move apart over a bending body get a matt liner under them, and a skin view check looks at the part from many directions around it, not from five axes."
-why = "No skin may show between or through plates from any direction. A check from five axis directions passed while the viewer showed skin through the neck plates."
+line = "Rigid parts that move apart over a bending body get a matt dark liner under them, so no red cloth shows by colour, and a skin view check looks at the part from many directions around it, not from five axes."
+why = "No skin may show between or through plates from any direction. A check from five axis directions passed while the viewer showed skin through the neck plates. A red liner showed as red in every opening; a matt dark one took the red out by colour, while the lit look of the openings changed little."
 area = "asset-craft"
 status = "active"
 ask = "From how many directions was the skin view checked, and how many skin samples show at rest and in each neck pose?"
@@ -23,6 +23,12 @@ method = "the skin view scripts rharmb_skinview.py and rharm_skinview.py of the 
 date = 2026-11-26
 
 [[evidence]]
+grade = "measured"
+value = "Armour 2 neck bands: with the red lining the first check failed the build (idle frames 207 to 219 from the driver's view: 21.29 cm2 through and 12.77 between the bands at LOD0, 30.62 and 19.73 at LOD1; the installed neck showed up to 111.72 cm2 red by colour). With a matt dark liner (34, 34, 33) red by colour was 0.00 cm2 in every pose and the second look passed it; the dark liner and 7 to 10 cm2 of skin still show in the head-low frames. In the lit render of frame 211 the openings read as dark lines before the change too: the lit pictures differ by 50 pixels at LOD0 and 7,852 at LOD1."
+method = "the teardown record docs/knowledge/teardowns/2026-11-27-sun-armour-neck.md; the colour probe k/cx_vis.py of lane 22 and the check's tools/s2_*.py, in the asset work folder, outside the repo"
+date = 2026-11-27
+
+[[evidence]]
 grade = "maintainer"
 value = "It needs to be pulled back a bit from the neck and there is clipping."
 date = 2026-11-25
@@ -30,7 +36,7 @@ date = 2026-11-25
 [[acts]]
 state = "instance"
 where = "build_liner in rharmb_bands.py"
-scope = "armour 5; armour 3 has a lining; open in armours 1, 2 and 4"
+scope = "armour 5; armour 3 has a lining; armour 2's neck lining is matt dark since v23e (set C v30); open in armours 1 and 4"
 
 [[acts]]
 state = "instance"
@@ -39,6 +45,9 @@ scope = "gates of that asset job, outside the repo"
 
 [[source]]
 teardown = "2026-11-26-horse-armour-neck-and-head"
+
+[[source]]
+teardown = "2026-11-27-sun-armour-neck"
 
 [[source]]
 maintainer = "2026-11-25"
