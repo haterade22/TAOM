@@ -5,7 +5,8 @@
 Faction Power gives each realm culture a power percent, from 50 to 200, that scales the party size limit of that
 realm's AI lord parties, the size limit of its garrisons, its militia growth, its volunteer refill, its auto-resolve
 strikes, and (above 100) lowers its AI wages. 100 is the default and changes nothing. The player's own
-clan, and every human player's clan in co-op, is never scaled. The percents are set per campaign with the
+clan, and every human player's clan in co-op, is never scaled. The percents are set per campaign: on the new-campaign
+screen (the "Realm power" category, see "The start screen") and, for a running campaign or an older save, with the
 `taom.faction_power` console command.
 
 ## Why This Exists
@@ -51,6 +52,31 @@ player's clan in co-op) or the main party.
 | Wages | `TaomPartyWageModel.GetTotalWage` | Above 100: AI lord parties and garrisons of the realm pay wages x 1/percent. At or below 100: normal wages. Applied after the AI wage relief and before free garrison upkeep. `GetTotalWage` also feeds `GetAvailableWageBudget`, so the relief widens AI recruiting and garrison budgets as well; that is intended. The upgrade budget widens less than 1/percent, because `PartyUpgraderCampaignBehavior` compares the relieved total against unrelieved per-troop wages, as with the AI wage relief. |
 
 
+### The start screen
+
+The Advanced Start Options screen (see [campaign-start-options.md](campaign-start-options.md)) has a "Realm power" category:
+
+- **Realm power** list: Standard (default, writes nothing), Evil +50%, Free peoples +50% and Custom.
+- **One slider per realm culture**, 50 to 200, default 100, built from the catalog, so a new `factions.json` entry with a
+  `game_faction` (or `power_culture`) and a `side` gets a slider with no code. The sliders are hidden unless the list says
+  Custom (an option condition answers "is this hidden", so `true` hides).
+- **Labels.** The screen reads names and descriptions from `Module.CurrentModule.GlobalTextManager`, which reads only
+  `global_strings.xml` (#604). The category and the list rows are fixed rows there. The slider rows are not in the file:
+  `FactionPowerStartScreen.Add` applies one name row (the realm's `factions.json` name text, which already has its
+  translations) and one description row per slider to that manager through `GlobalStringsOverrides.Apply`, the route
+  `SubModule` uses for the rest of the file. The description is the inline key `taom_fp_slider_desc`, harvested into
+  `taom_module_strings.xml`. `RealmPowerSliders_LabelsResolveFromTheTextManagerTheScreenReads_BeforeAnyFallbackIsNeeded`
+  makes the engine's own `GetName` and `GetDescription` calls on a manager that got only those rows. The fallback, 56
+  static rows in `global_strings.xml`, was not needed.
+- **The pin.** `CampaignStartSession.Begin` calls `FactionPowerSession.Begin(isNewCampaign)`. A new campaign reads the
+  screen keys (`taom_fp_preset`, `taom_fp_s_<culture>`; the engine writes only changed, visible options),
+  `FactionPowerStartResolver` (pure) turns them into percents, and `IFactionPowerSettings.TrySet` stores them under
+  `taom_fp_<culture>`. Then the store reloads. A loaded save is never pinned. The side presets write 150 for that side's
+  realms with the same rule as the console presets; Custom writes the moved sliders and skips any outside 50 to 200 with
+  a warning. Screen keys and stored keys stay separate, so the screen can change without a save migration.
+- **Logs.** `FactionPower.Pinned: preset=<item> <culture>=<percent> ...` when something was pinned,
+  `FactionPower.PinFailed` when a write was refused, and the existing `FactionPower.Loaded` after every load.
+
 ### Component Diagram
 
 ```
@@ -59,6 +85,10 @@ factions.json (game_faction / power_culture, side)
   FactionPowerCatalogProvider -> FactionPowerCatalog (one slider per realm culture)
         |
   FactionPowerStore (campaign option data, snapshot) <- FactionPowerEditor <- taom.faction_power
+        ^
+  FactionPowerSession <- CampaignStartSession.Begin (pins the screen's choice into a new campaign)
+        ^
+  FactionPowerStartResolver <- screen keys <- FactionPowerStartScreen (category, list, sliders, labels)
         |
   FactionPowerService (multiplier, player clan rule)
         |
@@ -107,6 +137,10 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 | `Main/Features/FactionPower/FactionPowerStore.cs` | Campaign option data and the snapshot |
 | `Main/Features/FactionPower/FactionPowerService.cs` | Multiplier lookup and the player clan rule |
 | `Main/Features/FactionPower/FactionPowerEditor.cs` | `list`, `set` and `preset` |
+| `Main/Features/FactionPower/FactionPowerScreenKeys.cs` | Screen keys and list item ids |
+| `Main/Features/FactionPower/FactionPowerStartResolver.cs` | Screen choice to percents (pure) |
+| `Main/Features/FactionPower/FactionPowerSession.cs` | Pins a new campaign's screen choice, reloads the store |
+| `Main/Features/AdvancedStartOptions/FactionPowerStartScreen.cs` | The category, list, sliders and label rows |
 | `Main/Features/FactionPower/Hooks/FactionPowerPartyHook.cs` | The seam `TaomPartySizeModel` calls |
 | `Main/Features/FactionPower/Hooks/FactionPowerEconomyHook.cs` | The seam the militia and wage models call |
 | `Main/Features/FactionPower/Hooks/FactionPowerStrikeHook.cs` | The seam `TaomCombatSimulationModel` calls |
@@ -117,6 +151,8 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 ## Dependencies
 
 - `IAdvancedStartDataAdapter` (CampaignStartOptions): the campaign's option data
+- `CampaignStartSession` (CampaignStartOptions) calls `IFactionPowerSession.Begin`; `TaomStartOptionsProvider` (AdvancedStartOptions) adds the screen
+- `GlobalStringsOverrides` (LocalizationOverride): the slider label rows
 - `IFactionConfigProvider` (FactionMap): factions.json
 - `IPlayerControlQuery` (co-op): which clans belong to human players
 - `AiPartySizeService.IsScalableAiLordParty` (AiPartySize): which parties count as AI lord parties
@@ -126,6 +162,10 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 - `TAOM.Tests/Features/FactionPower/`: the math, catalog, store, editor, presets, service and wiring.
 - `FactionPowerCatalogTests.EveryShippedKingdomCulture_HasASlider`: every TAOM kingdom culture has a slider.
 - `FactionPowerEconomyTests`: militia equilibrium, strike, wage relief, volunteers and the model call order.
+- `FactionPowerStartTests`: the resolver for every preset and for Custom, and the session over a real store (new campaign,
+  loaded save, a second campaign, no campaign, a refused write).
+- `TaomStartOptionsProviderTests`: the category, the list, the sliders hidden unless Custom (both polarities), hidden sliders
+  absent from `GetChangedOptions`, and the label gate above.
 - `TAOM.Tests/Features/AiPartySize/AiPartySizeOrderingTests.cs`: the call order in `TaomPartySizeModel`.
 
 ## How to verify in game
@@ -138,6 +178,16 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
    the line is "Realm power", and its percent is the added factor, so it reads more than +100% when the party already
    has other factors.
 3. Run `taom.faction_power preset reset`, then `taom.faction_power list`. Every realm shows 100.
+
+**Start screen** (a new campaign, from the main menu):
+
+1. Open the Advanced Start Options. The "Realm power" category has the list at Standard and no sliders. No row reads "ERROR".
+2. Pick Evil +50%, start the campaign, then check `taom_debug` for `FactionPower.Pinned: preset=taom_fp_preset_evil50 ...`
+   with the evil realms at 150, and `FactionPower.Loaded` with the same table. In the party tooltip of a Mordor lord the
+   limit shows a "Realm power" line; a Gondor lord's shows none.
+3. Start another campaign with Custom: one slider per realm appears, named like the kingdoms. Move two, start, and `taom.faction_power list` shows them.
+4. Load a save from before this change: `list` shows 100 everywhere and the start screen choice is not applied to it.
+No `[Check]` line exists for this, and no `tools/ingame_checks` manifest: the manifest file is named for an issue number and this work has none.
 
 ## Known limits
 
@@ -155,6 +205,7 @@ A write clears the party size cache of every party (`PartySizeCacheInvalidator.I
 
 ## Changelog
 
+- 2026-11-28: PR C: the start screen (Realm power list, per-realm sliders, labels from `factions.json`, the pin on a new campaign).
 - 2026-11-26: PR B: militia, volunteer refill, auto-resolve strength and wage relief.
 - 2026-11-25: PR #1592: the feature, the console command, and the realm key `power_culture` for Shaghâna and
   Âbanissa.

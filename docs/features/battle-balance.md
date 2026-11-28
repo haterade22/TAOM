@@ -171,6 +171,12 @@ TAOM rescales the exponent to `AutoResolve.PowerRatioExponent` (shipped 0.5, #12
 
 Only the simulated battle changes. It changes for every simulated battle, the player's Send troops and the player's raids included; real-time battles never reach `SimulateHit`. The AI's strength estimates (war declaration, army gathering, siege targets, flee) sum `N x P` through `GetPowerOfParty` and do not read the exponent. `SimulateHit` reads the two troop powers again (`GetTroopPower` with the side, the simulation context and the leader hero's `PowerModifier`) and scales the final number through `AutoResolveQualityMath.Apply`, so the Armory_TAOM postfix on this override still sees one result. The base reads the internal `LeaderSimulationModifier`, which the engine caches at event start, after a load and when the leader party leaves. So the two reads differ only after a side's leader hero dies or is replaced during the event, by a few percent. The scaled damage also feeds hero wounds and deaths and the troops' XP (`MapEventSide`, lines 928-946), so expect more lord wounds against large hosts and faster upgrades for weak troops. 0.7 restores vanilla; 0 ignores quality. A gear (armour) factor was considered and not added: Gondor has the heaviest armour, so it would widen the lead #1283 reported.
 
+## Per-realm power
+
+[faction-power.md](faction-power.md) lets a campaign scale a realm's auto-resolve damage (the square root of its power
+percent, applied in `TaomCombatSimulationModel.SimulateHit` beside the quality and refuge steps), its garrison and militia
+size, and its wages. At 100 percent nothing changes.
+
 ## Siege defence by culture
 
 In an auto-resolved siege assault the engine gives the attackers `AddFactor(-0.1)` on their battle advantage (`DefaultCombatSimulationModel.GetBattleAdvantage`, lines 278-286), and each simulated strike's damage is multiplied by the striker's advantage (`SimulateHit`, line 21). `TaomCombatSimulationModel.GetBattleAdvantage` adds a factor to the defenders' side when the besieged fortification's realm (`Settlement.MapFaction`) has a culture with a `SiegeDefence.DefenderAdvantageBonuses` row. `MapEvent.SimulateBattleRound` reads both advantages once per round. A sally-out is a different battle type and gets no bonus. An assault that a relief party joins from outside the walls becomes `SiegeOutside` (`SiegeAssaultEventComponent.OnAddInvolvedParty`), and from then on neither the bonus nor the attackers' -0.1 applies.

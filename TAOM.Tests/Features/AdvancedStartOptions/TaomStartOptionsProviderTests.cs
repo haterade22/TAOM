@@ -5,9 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using HarmonyLib;
+using TaleWorlds.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.AdvancedStartOptions;
 using TAOM.Features.CampaignStartOptions;
+using TAOM.Features.FactionPower;
 using TAOM.Tests.Core;
 using TAOM.Tests.Migration;
 
@@ -306,6 +308,132 @@ public class TaomStartOptionsProviderTests
         Assert.IsFalse(Has(CampaignStartOptionKeys.WarCanBeWonOption), "left at its default");
     }
 
+    // ---- realm power: the preset list, the sliders and their labels ----
+
+    private static string SliderKey(string culture) => FactionPowerScreenKeys.SliderKey(culture);
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void RealmPower_HasAPresetListInItsCategory_StandardByDefault_AndASliderPerRealm()
+    {
+        RequireGame();
+        var (optionsType, options) = BuildMergedOptions(WarOn);
+
+        var preset = Option(optionsType, options, FactionPowerScreenKeys.PresetOption);
+        CollectionAssert.AreEqual(FactionPowerScreenKeys.PresetItems, ItemIds(preset));
+        Assert.AreEqual(FactionPowerScreenKeys.StandardItem, GetValue<string>(preset));
+        Assert.AreEqual(FactionPowerScreenKeys.Category, (string)preset.GetType().GetProperty("CategoryId")!.GetValue(preset)!);
+        foreach (var realm in TestRealms)
+        {
+            var slider = Option(optionsType, options, SliderKey(realm.CultureId));
+            Assert.AreEqual(100, GetValue<int>(slider), realm.CultureId + " defaults to 100");
+            Assert.AreEqual(50, (int)slider.GetType().GetField("MinValue")!.GetValue(slider)!);
+            Assert.AreEqual(200, (int)slider.GetType().GetField("MaxValue")!.GetValue(slider)!);
+            Assert.AreEqual(FactionPowerScreenKeys.Category, (string)slider.GetType().GetProperty("CategoryId")!.GetValue(slider)!);
+        }
+    }
+
+    // The option conditions answer "is this option HIDDEN", so true hides: one case per polarity.
+    [DataTestMethod]
+    [DataRow(FactionPowerScreenKeys.CustomItem, false)]
+    [DataRow(FactionPowerScreenKeys.StandardItem, true)]
+    [DataRow(FactionPowerScreenKeys.EvilItem, true)]
+    [DataRow(FactionPowerScreenKeys.FreeItem, true)]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void RealmPowerSliders_AreShownOnlyForTheCustomPreset(string presetValue, bool hidden)
+    {
+        RequireGame();
+        var (optionsType, options) = BuildMergedOptions(WarOn);
+        SetValue(Option(optionsType, options, FactionPowerScreenKeys.PresetOption), presetValue);
+
+        foreach (var realm in TestRealms)
+            Assert.AreEqual(hidden, IsHidden(Option(optionsType, options, SliderKey(realm.CultureId)), options), realm.CultureId);
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void RealmPower_ChangedOptions_HoldThePresetOrTheMovedSlider_AndNotAHiddenOne()
+    {
+        RequireGame();
+        var (optionsType, options) = BuildMergedOptions(WarOn);
+        var getChanged = optionsType.GetMethod("GetChangedOptions")!;
+        bool Has(string key)
+        {
+            var changed = getChanged.Invoke(options, null)!;
+            return changed.GetType().GetMethod("GetOption")!.Invoke(changed, new object[] { key }) != null;
+        }
+
+        Assert.IsFalse(Has(FactionPowerScreenKeys.PresetOption), "Standard is the default");
+        SetValue(Option(optionsType, options, FactionPowerScreenKeys.PresetOption), FactionPowerScreenKeys.CustomItem);
+        SetValue(Option(optionsType, options, SliderKey("mordor")), 150);
+        Assert.IsTrue(Has(FactionPowerScreenKeys.PresetOption));
+        Assert.IsTrue(Has(SliderKey("mordor")), "a moved visible slider arrives");
+        Assert.IsFalse(Has(SliderKey("gondor")), "an unmoved slider is left out");
+
+        // The player then picks a side preset: the sliders are hidden again and drop out, whatever they hold.
+        SetValue(Option(optionsType, options, FactionPowerScreenKeys.PresetOption), FactionPowerScreenKeys.EvilItem);
+        Assert.IsTrue(Has(FactionPowerScreenKeys.PresetOption));
+        Assert.IsFalse(Has(SliderKey("mordor")), "hidden with a side preset");
+    }
+
+    // The gate for the label route. The screen asks the main-menu text manager for str_campaign_starting_options_name and
+    // _description with the option id as the variation (AdvancedStartOptions.GetOptionName and GetOptionDescription call
+    // AdvancedStartData.GetName and GetDescription on Module.CurrentModule.GlobalTextManager). A slider whose rows do not
+    // resolve there shows "ERROR: Text with id ... doesn't exist", and the fallback is 56 static rows in global_strings.xml.
+    // This test makes the same two calls on a manager that got only the rows the provider applied.
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void RealmPowerSliders_LabelsResolveFromTheTextManagerTheScreenReads_BeforeAnyFallbackIsNeeded()
+    {
+        RequireGame();
+        _labels = new GameTextManager();
+        try
+        {
+            var (optionsType, options) = BuildMergedOptions(WarOn);
+
+            foreach (var realm in TestRealms)
+            {
+                var option = Option(optionsType, options, SliderKey(realm.CultureId));
+                var value = option.GetType().GetProperty("Value")!.GetValue(option)!;
+                var name = (TaleWorlds.Localization.TextObject)value.GetType().GetMethod("GetName")!.Invoke(value, new object[] { _labels })!;
+                var description = (TaleWorlds.Localization.TextObject)value.GetType().GetMethod("GetDescription")!.Invoke(value, new object[] { _labels })!;
+
+                Assert.AreEqual(realm.Name, name.Value, realm.CultureId + " name is its factions.json name text");
+                Assert.IsTrue(description.Value.StartsWith("{=taom_fp_slider_desc}"), realm.CultureId + " description: " + description.Value);
+            }
+        }
+        finally { _labels = null; }
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void RealmPowerSliders_WithNoTextManager_StillBuildTheOptions()
+    {
+        RequireGame();
+        _labels = null;
+        var (optionsType, options) = BuildMergedOptions(WarOn);
+
+        Assert.IsNotNull(Option(optionsType, options, SliderKey("mordor")));
+    }
+
+    [TestMethod]
+    public void RealmPowerLabelRows_NameAndDescribeEverySlider()
+    {
+        var rows = FactionPowerStartScreen.LabelRows(TestRealms);
+
+        CollectionAssert.AreEqual(
+            new[] { SliderKey("gondor"), SliderKey("gondor"), SliderKey("mordor"), SliderKey("mordor") },
+            rows.Select(r => r.Variation).ToList());
+        Assert.AreEqual(TestRealms[0].Name, rows[0].Text);
+        Assert.AreEqual("str_campaign_starting_options_name", rows[0].Id);
+        Assert.AreEqual("str_campaign_starting_options_description", rows[1].Id);
+    }
+
     private static object Option(Type optionsType, object options, string key) =>
         GetOptionMethod(optionsType).Invoke(options, new object[] { key })
         ?? throw new AssertFailedException(key + " is not an option of the merged set.");
@@ -325,12 +453,30 @@ public class TaomStartOptionsProviderTests
     private static MethodInfo GetOptionMethod(Type optionsType) => optionsType.GetMethods()
         .Single(m => m.Name == "GetOption" && !m.IsGenericMethod && m.GetParameters().Length == 1);
 
+    private static readonly FactionPowerEntry[] TestRealms =
+    {
+        new FactionPowerEntry("gondor", "{=taom_faction_stewardship_of_gondor_name}Stewardship of Gondor", "free"),
+        new FactionPowerEntry("mordor", "{=taom_faction_mordor_name}Mordor", "evil"),
+    };
+
+    // The realm power seams: a fixed catalog and a text manager the test owns, never the container or Module.CurrentModule.
+    private static GameTextManager? _labels;
+
     private static void WithDefaults(StartDefaults defaults, Action run)
     {
         var previous = TaomStartOptionsProvider.Defaults;
+        var previousRealms = TaomStartOptionsProvider.FactionPowerEntries;
+        var previousLabels = TaomStartOptionsProvider.LabelManager;
         TaomStartOptionsProvider.Defaults = () => defaults;
+        TaomStartOptionsProvider.FactionPowerEntries = () => TestRealms;
+        TaomStartOptionsProvider.LabelManager = () => _labels;
         try { run(); }
-        finally { TaomStartOptionsProvider.Defaults = previous; }
+        finally
+        {
+            TaomStartOptionsProvider.Defaults = previous;
+            TaomStartOptionsProvider.FactionPowerEntries = previousRealms;
+            TaomStartOptionsProvider.LabelManager = previousLabels;
+        }
     }
 
     // Runs vanilla's provider, then TAOM's, against one AdvancedStartOptions, with the defaults pinned
@@ -414,6 +560,7 @@ public class TaomStartOptionsProviderTests
         CampaignStartOptionKeys.CustomDay2Option, CampaignStartOptionKeys.TroopWeightOption,
         CampaignStartOptionKeys.WarCanBeWonOption, CampaignStartOptionKeys.EyeHuntersOption,
         CampaignStartOptionKeys.LargeAiArmiesOption, CampaignStartOptionKeys.AlignmentPresetOption,
+        FactionPowerScreenKeys.PresetOption,
     };
 
     private static readonly string[] CampaignListItemIds =
@@ -423,6 +570,8 @@ public class TaomStartOptionsProviderTests
         CampaignStartOptionKeys.StartLateItem, CampaignStartOptionKeys.StartCustomItem,
         CampaignStartOptionKeys.AlignmentStandardItem, CampaignStartOptionKeys.AlignmentStrictItem,
         CampaignStartOptionKeys.AlignmentRelaxedItem,
+        FactionPowerScreenKeys.StandardItem, FactionPowerScreenKeys.EvilItem, FactionPowerScreenKeys.FreeItem,
+        FactionPowerScreenKeys.CustomItem,
     };
 
     [TestMethod]
@@ -442,6 +591,7 @@ public class TaomStartOptionsProviderTests
                 "str_campaign_starting_options_item_description." + i,
             }))
             .Append("str_campaign_starting_options_category_name." + CampaignStartOptionKeys.RulesCategory)
+            .Append("str_campaign_starting_options_category_name." + FactionPowerScreenKeys.Category)
             .ToList();
         var missing = expected.Where(id => !ids.Contains(id)).ToList();
         Assert.AreEqual(0, missing.Count, "global_strings.xml lacks the campaign start option rows: " + string.Join(", ", missing));

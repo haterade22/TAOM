@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using SandBox.AdvancedStartOptions;
+using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
 using TAOM.Features.CampaignStartOptions;
+using TAOM.Features.FactionPower;
 
 namespace TAOM.Features.AdvancedStartOptions;
 
@@ -47,12 +51,18 @@ public static class TaomStartOptionsProvider
     internal static Func<StartDefaults> Defaults =
         () => IoC.Resolve<ICampaignStartDefaults>().Current();
 
+    internal static Func<IReadOnlyList<FactionPowerEntry>> FactionPowerEntries =
+        () => IoC.Resolve<IFactionPowerCatalog>().Entries;
+
+    internal static Func<GameTextManager?> LabelManager = () => Module.CurrentModule?.GlobalTextManager;
+
     [StartOptionsProvider]
     private static void AddStartOptions(SandBox.AdvancedStartOptions.AdvancedStartOptions options)
     {
         // The scenario list becomes War of the Ring or Sandbox; United Empire is not offered
         // (docs/features/campaign-start-options.md says why).
         CampaignStartOptionsScreen.Add(options, Defaults());
+        FactionPowerStartScreen.Add(options, FactionPowerEntries(), LabelManager());
         AddTaomKingdomsToFactionPickers(options);
     }
 

@@ -57,7 +57,7 @@ public class CampaignStartOptionsStoreTests
     }
 
     private CampaignStartSession SessionOver(CampaignStartOptionsStore store) =>
-        new CampaignStartSession(_data, store, _defaults, _logger, Substitute.For<TAOM.Features.FactionPower.IFactionPowerSettings>());
+        new CampaignStartSession(_data, store, _defaults, _logger, Substitute.For<TAOM.Features.FactionPower.IFactionPowerSession>());
 
     private CampaignStartOptionsStore Create() => new CampaignStartOptionsStore(_data, _logger);
 
