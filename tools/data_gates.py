@@ -465,6 +465,10 @@ GATES = (
          ("docs/reference/engine/scene-gameentity-scriptcomponent.md",), files=True,
          note="judges the scene files you named, or every live TAOM_Map scene under --all; "
               "a wall placed as a bare prefab instance is not judged"),
+    Gate("terrain-layers", "TAOM and TAOM_Map scene files", ("*/sceneobj/*/scene.xscene", "*tools/check_terrain_layers.py"),
+         ("python", "tools/check_terrain_layers.py"), ("docs/reference/terrain-layer-gate.md",), files=True,
+         note="a node that uses only flora layers (or none) in a season breaks the terrain shader compile; "
+              "the faults listed in KNOWN_FAULTS in the tool are tolerated, with their reasons"),
 )
 
 
